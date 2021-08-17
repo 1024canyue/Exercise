@@ -34,19 +34,19 @@ def get_min(x,month,day):
     '''该函数用来提取每天最低温，并还原缩放'''
     return x[(x.月==month) & (x.日==day)].气温.min()/10
 
-def max_tpm(weather):   #最低温模型
+def min_tpm(weather):   #最低温模型
     '''向该函数传入往年天气数据，将返回训练好的模型'''
     X = weather.values[:,:2]   #日期
-    Y = weather.values[:,3]    #最低温
+    Y = weather.values[:,2]    #最低温
     from sklearn.ensemble import RandomForestRegressor
     reg_min = RandomForestRegressor(n_estimators=500,n_jobs=-1)
     reg_min.fit(X,Y)
     return reg_min
 
-def min_tpm(weather):   #最高温模型
+def max_tpm(weather):   #最高温模型
     '''向该函数传入往年天气数据，将返回训练好的模型'''
     X = weather.values[:,:2]   #日期
-    Y = weather.values[:,2]    #最高温
+    Y = weather.values[:,3]    #最高温
     from sklearn.ensemble import RandomForestRegressor
     reg_max = RandomForestRegressor(n_estimators=500,n_jobs=-1)
     reg_max.fit(X,Y)
