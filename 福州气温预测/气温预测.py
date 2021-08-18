@@ -13,8 +13,6 @@ def start():   #用来初始化环境
     import numpy as np
     import matplotlib.pyplot as plt
     from sklearn.model_selection import train_test_split
-    plt.rcParams['font.sans-serif'] = ['SimHei']  #更改一个有中文的字体
-    plt.rcParams['axes.unicode_minus']=False  #解决符号不显示问题
 
     #载入数据
     df = pd.read_csv("./data/福州天气.csv",sep="\\s+")  #读取原数据
@@ -39,7 +37,7 @@ def min_tpm(weather):   #最低温模型
     X = weather.values[:,:2]   #日期
     Y = weather.values[:,2]    #最低温
     from sklearn.ensemble import RandomForestRegressor
-    reg_min = RandomForestRegressor(n_estimators=500,n_jobs=-1)
+    reg_min = RandomForestRegressor(min_samples_leaf=10,n_estimators=400,n_jobs=-1)
     reg_min.fit(X,Y)
     return reg_min
 
@@ -48,7 +46,7 @@ def max_tpm(weather):   #最高温模型
     X = weather.values[:,:2]   #日期
     Y = weather.values[:,3]    #最高温
     from sklearn.ensemble import RandomForestRegressor
-    reg_max = RandomForestRegressor(n_estimators=500,n_jobs=-1)
+    reg_max = RandomForestRegressor(min_samples_leaf=10,n_estimators=300,n_jobs=-1)
     reg_max.fit(X,Y)
     return reg_max
 
@@ -63,7 +61,7 @@ def debug():
     try:
         weather=start()
     except FileNotFoundError:
-        print("环境异常:本程序依赖于数据文件，您的电脑缺失数据文件或路径异常(缺少：福州天气.csv)")
+        print("环境异常:本程序依赖数据文件，您的电脑缺失数据文件或路径异常(缺少：./data/福州天气.csv)")
         input()  #防止窗口直接被关掉而看不到异常提示
         sys.exit(0)
     except ModuleNotFoundError:
@@ -83,7 +81,7 @@ def PrintMenu():
     mom = time.localtime(time.time()).tm_mon
     day = time.localtime(time.time()).tm_mday     
     today_max,today_min=max_min(mom,day)
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     print(time.strftime("今天是:%Y年%m月%d日", time.localtime()),"新的一天，新的开始")
     print("预计今天福州最高温{:.2f}℃，最低温{:.2f}℃".format(today_max,today_min))
     if today_max-today_min>10:
@@ -92,12 +90,12 @@ def PrintMenu():
         print("有一种热叫福州的热，外出要做好防暑工作")
     if today_min<12:
         print("有一种冷叫南方的冷，晚上要小心着凉")
-    print("\n■■■■■■■■■■■■■■■■■■■■■菜单■■■■■■■■■■■■■■■■■■■■■■■")
+    print("\n===============菜 单==================")
     print("1:预测其他日期")
     print("2:预测未来几天")
     print("3:打印月历")
     print("4:关于")
-    print("敬请期待。。。。。")
+    print("敬请期待。。。。。\n")
 
 
 
@@ -166,6 +164,8 @@ while True:
         print("从而通过历史数据得到\"经验\",找到每天气温的规律。")
         print("模型在实验中对数据预测的准确度均在95%以上，但真实的天气变化多端，模型")
         print("的预测也不能代表实际，主要还是以参考为主，及时发现温度变化。")
-        print("版本 V1.1  修改日期 2021-08-17")
+        print("版本 V1.2  修改日期 2021-08-18\n日志:提升运行效率，降低过拟合，优化显示效果。")
         input("回车键返回")
-
+    if key=="exit" or key=="e":
+        print("bay~~~")
+        sys.exit(0)
